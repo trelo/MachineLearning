@@ -1,0 +1,253 @@
+Final Tidy Dataset Data DICTIONARY
+(Final Tidy Dataset- average of mean and standard deviation for each measurement for each activity and each subject.)
+
+1  Activity  	
+Type of activity performed wearing a smartphone on the waist
+Possible Values
+	WALKING, 
+	WALKING_UPSTAIRS, 
+	WALKING_DOWNSTAIRS, 
+	SITTING, 
+	STANDING, 
+	LAYING
+
+
+2	Subject                         	
+The subject who performed the activity for each window sample. Its range is from 1 to 30. 
+
+3	tBodyAcc.mean...X    	
+Average of mean values of estimated body acceleration signals along X axis in time domain  
+
+4	tBodyAcc.mean...Y	
+Average of mean values of estimated body acceleration signals along Y axis in time domain  
+
+5	tBodyAcc.mean...Z	
+Average of mean values of estimated body acceleration signals along Z axis in time domain  
+
+6	tGravityAcc.mean...X	
+Average of mean values of gravity acceleration  signals along X axis in time domain  
+
+7	tGravityAcc.mean...Y	
+Average of mean values of gravity acceleration  signals along Y axis in time domain  
+
+8	tGravityAcc.mean...Z	
+Average of mean values of gravity acceleration  signals along Z axis in time domain  
+
+9	tBodyAccJerk.mean...X	
+Average of mean values of body linear acceleration jerk signals along X axis in time domain  
+
+10	tBodyAccJerk.mean...Y	
+Average of mean values of body linear acceleration jerk signals along Y axis in time domain  
+
+11	tBodyAccJerk.mean...Z	
+Average of mean values of body linear acceleration jerk signals along Z axis in time domain  
+
+12	tBodyGyro.mean...X	
+Average of mean values of body angular velocity  signals along X axis in time domain  
+
+13	tBodyGyro.mean...Y	
+Average of mean values of body angular velocity  signals along Y axis in time domain  
+
+14	tBodyGyro.mean...Z	
+Average of mean values of body angular velocity  signals along Z axis in time domain  
+
+15	tBodyGyroJerk.mean...X	
+Average of mean values of body angular velocity jerk signals along X axis in time domain  
+
+16	tBodyGyroJerk.mean...Y	
+Average of mean values of body angular velocity jerk signals along Y axis in time domain  
+
+17	tBodyGyroJerk.mean...Z	
+Average of mean values of body angular velocity jerk signals along Z axis in time domain  
+
+18	tBodyAccMag.mean..	
+Average of mean values of magnitude of body linear acceleration signals along all 3 dimentiontions in time domain  
+
+19	tGravityAccMag.mean..	
+Average of mean values of magnitude of gravity acceleration  signals along all 3 dimentiontions in time domain  
+
+20	tBodyAccJerkMag.mean..	
+Average of mean values of magnitude of body linear acceleration jerk signals along all 3 dimentiontions in time domain  
+
+21	tBodyGyroMag.mean..	
+Average of mean values of magnitude of body angular velocity  signals along all 3 dimentiontions in time domain  
+
+22	tBodyGyroJerkMag.mean..	
+Average of mean values of magnitude of body angular velocity jerk signals along all 3 dimentiontions in time domain  
+
+23	fBodyAcc.mean...X	
+Average of mean values of estimated body acceleration signals along X axis in frequency domain  
+
+24	fBodyAcc.mean...Y	
+Average of mean values of estimated body acceleration signals along Y axis in frequency domain  
+
+25	fBodyAcc.mean...Z	
+Average of mean values of estimated body acceleration signals along Z axis in frequency domain  
+
+26	fBodyAcc.meanFreq...X	
+Average of mean frequency (Weighted average of the frequency components)estimated body acceleration signals along X axis in frequency domain  
+
+27	fBodyAcc.meanFreq...Y	
+Average of mean frequency (Weighted average of the frequency components)estimated body acceleration signals along Y axis in frequency domain  
+
+28	fBodyAcc.meanFreq...Z	
+Average of mean frequency (Weighted average of the frequency components)estimated body acceleration signals along Z axis in frequency domain  
+
+29	fBodyAccJerk.mean...X	
+Average of mean values of body linear acceleration jerk signals along X axis in frequency domain  
+
+30	fBodyAccJerk.mean...Y	
+Average of mean values of body linear acceleration jerk signals along Y axis in frequency domain  
+
+31	fBodyAccJerk.mean...Z	
+Average of mean values of body linear acceleration jerk signals along Z axis in frequency domain  
+
+32	fBodyAccJerk.meanFreq...X	
+Average of mean frequency (Weighted average of the frequency components)body linear acceleration jerk signals along X axis in frequency domain  
+
+33	fBodyAccJerk.meanFreq...Y	
+Average of mean frequency (Weighted average of the frequency components)body linear acceleration jerk signals along Y axis in frequency domain  
+
+34	fBodyAccJerk.meanFreq...Z	
+Average of mean frequency (Weighted average of the frequency components)body linear acceleration jerk signals along Z axis in frequency domain  
+
+35	fBodyGyro.mean...X	
+Average of mean values of body angular velocity  signals along X axis in frequency domain  
+
+36	fBodyGyro.mean...Y             	
+Average of mean values of body angular velocity  signals along Y axis in frequency domain  
+
+37	fBodyGyro.mean...Z	
+Average of mean values of body angular velocity  signals along Z axis in frequency domain  
+
+38	fBodyGyro.meanFreq...X	
+Average of mean frequency (Weighted average of the frequency components)body angular velocity  signals along X axis in frequency domain  
+
+39	fBodyGyro.meanFreq...Y         	
+Average of mean frequency (Weighted average of the frequency components)body angular velocity  signals along Y axis in frequency domain  
+
+40	fBodyGyro.meanFreq...Z	
+Average of mean frequency (Weighted average of the frequency components)body angular velocity  signals along Z axis in frequency domain  
+
+41	fBodyAccMag.mean..	
+Average of mean values of magnitude of body linear acceleration signals along all 3 dimentiontions in frequency domain  
+
+42	fBodyAccMag.meanFreq..	
+Average of mean frequency (Weighted average of the frequency components)magnitude of body linear acceleration signals along all 3 dimentiontions in frequency domain  
+
+43	fBodyBodyAccJerkMag.mean..	
+Average of mean values of magnitude of body linear acceleration jerk signals along all 3 dimentiontions in frequency domain  
+
+44	fBodyBodyAccJerkMag.meanFreq..	
+Average of mean frequency (Weighted average of the frequency components)magnitude of body linear acceleration jerk signals along all 3 dimentiontions in frequency domain  
+
+45	fBodyBodyGyroMag.mean..	
+Average of mean values of magnitude of body angular velocity  signals along all 3 dimentiontions in frequency domain  
+
+46	fBodyBodyGyroMag.meanFreq..	
+Average of mean frequency (Weighted average of the frequency components)magnitude of body angular velocity  signals along all 3 dimentiontions in frequency domain  
+
+47	fBodyBodyGyroJerkMag.mean..	
+Average of mean values of magnitude of body angular velocity jerk signals along all 3 dimentiontions in frequency domain  
+
+48	fBodyBodyGyroJerkMag.meanFreq..	
+Average of mean frequency (Weighted average of the frequency components)magnitude of body angular velocity jerk signals along all 3 dimentiontions in frequency domain  
+
+49	tBodyAcc.std...X	
+Average of standard deviation values of estimated body acceleration signals along X axis in time domain  
+
+50	tBodyAcc.std...Y	
+Average of standard deviation values of estimated body acceleration signals along Y axis in time domain  
+
+51	tBodyAcc.std...Z               	
+Average of standard deviation values of estimated body acceleration signals along Z axis in time domain  
+
+52	tGravityAcc.std...X	
+Average of standard deviation values of gravity acceleration  signals along X axis in time domain  
+
+53	tGravityAcc.std...Y	
+Average of standard deviation values of gravity acceleration  signals along Y axis in time domain  
+
+54	tGravityAcc.std...Z	
+Average of standard deviation values of gravity acceleration  signals along Z axis in time domain  
+
+55	tBodyAccJerk.std...X	
+Average of standard deviation values of body linear acceleration jerk signals along X axis in time domain  
+
+56	tBodyAccJerk.std...Y	
+Average of standard deviation values of body linear acceleration jerk signals along Y axis in time domain  
+
+57	tBodyAccJerk.std...Z	
+Average of standard deviation values of body linear acceleration jerk signals along Z axis in time domain  
+
+58	tBodyGyro.std...X	
+Average of standard deviation values of body angular velocity  signals along X axis in time domain  
+
+59	tBodyGyro.std...Y	
+Average of standard deviation values of body angular velocity  signals along Y axis in time domain  
+
+60	tBodyGyro.std...Z 	
+Average of standard deviation values of body angular velocity  signals along Z axis in time domain  
+
+61	tBodyGyroJerk.std...X	
+Average of standard deviation values of body angular velocity jerk signals along X axis in time domain  
+
+62	tBodyGyroJerk.std...Y	
+Average of standard deviation values of body angular velocity jerk signals along Y axis in time domain  
+
+63	tBodyGyroJerk.std...Z          	
+Average of standard deviation values of body angular velocity jerk signals along Z axis in time domain  
+
+64	tBodyAccMag.std..	
+Average of standard deviation values of magnitude of body linear acceleration signals along all 3 dimentiontions in time domain  
+
+65	tGravityAccMag.std..	
+Average of standard deviation values of magnitude of gravity acceleration  signals along all 3 dimentiontions in time domain  
+
+66	tBodyAccJerkMag.std..	
+Average of standard deviation values of magnitude of body linear acceleration jerk signals along all 3 dimentiontions in time domain  
+
+67	tBodyGyroMag.std..	
+Average of standard deviation values of magnitude of body angular velocity  signals along all 3 dimentiontions in time domain  
+
+68	tBodyGyroJerkMag.std..	
+Average of standard deviation values of magnitude of body angular velocity jerk signals along all 3 dimentiontions in time domain  
+
+69	fBodyAcc.std...X               	
+Average of standard deviation values of estimated body acceleration signals along X axis in frequency domain  
+
+70	fBodyAcc.std...Y	
+Average of standard deviation values of estimated body acceleration signals along Y axis in frequency domain  
+
+71	fBodyAcc.std...Z 	
+Average of standard deviation values of estimated body acceleration signals along Z axis in frequency domain  
+
+72	fBodyAccJerk.std...X	
+Average of standard deviation values of body linear acceleration jerk signals along X axis in frequency domain  
+
+73	fBodyAccJerk.std...Y	
+Average of standard deviation values of body linear acceleration jerk signals along Y axis in frequency domain  
+
+74	fBodyAccJerk.std...Z	
+Average of standard deviation values of body linear acceleration jerk signals along Z axis in frequency domain  
+
+75	fBodyGyro.std...X              	
+Average of standard deviation values of body angular velocity  signals along X axis in frequency domain  
+
+76	fBodyGyro.std...Y	
+Average of standard deviation values of body angular velocity  signals along Y axis in frequency domain  
+
+77	fBodyGyro.std...Z	
+Average of standard deviation values of body angular velocity  signals along Z axis in frequency domain  
+
+78	fBodyAccMag.std..              	
+Average of standard deviation values of magnitude of body linear acceleration signals along all 3 dimentiontions in frequency domain  
+
+79	fBodyBodyAccJerkMag.std..	
+Average of standard deviation values of magnitude of body linear acceleration jerk signals along all 3 dimentiontions in frequency domain  
+
+80	fBodyBodyGyroMag.std..	
+Average of standard deviation values of magnitude of body angular velocity  signals along all 3 dimentiontions in frequency domain  
+
+81	fBodyBodyGyroJerkMag.std.. 	
+Average of standard deviation values of magnitude of body angular velocity jerk signals along all 3 dimentiontions in frequency domain  
