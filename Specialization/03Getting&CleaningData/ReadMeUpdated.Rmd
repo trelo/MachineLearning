@@ -1,0 +1,84 @@
+#=============================================================
+#Creation of a tidy dataset with average of mean and standard deviation for each measuremen#t for each activity and each subject.
+#=============================================================
+#The dataset is created from Human Activity Recognition Using Smartphones Dataset. The Smartphones dataset consists of measurements of human activity based on experiments  carried out with a group of 30 volunteers. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, the 3-axial linear acceleration and 3-axial angular velocity were captured. The obtained dataset has been partitioned into two sets in training and test dataset.
+#=============================================================
+#The tidy dataset have been created merging the training and test datasets. The raw data consists of measurements, subjects and activity for training  and test set in seperate files.
+#- 'features.txt': List of all features.
+#- 'activity_labels.txt': Links the class labels with their activity name.
+#- 'train/X_train.txt': Training set.
+#- 'train/y_train.txt': Training activity labels.
+#- 'test/X_test.txt': Test set.
+#- 'test/y_test.txt': Test activity labels.
+#- 'train/subject_train.txt': subject used as training set. 
+#- 'train/subject_test.txt': subject used as training set. 
+#=============================================================
+#Here is a summary of the steps followed:
+#-------------------------------------------------------------
+#Getting data
+#-------------------------------------------------------------
+## Assumption: Samsung data dowloaded from the source is the working directory
+library(gdata) 
+library(dplyr) 
+#
+trainData <- read.table("X_train.txt")
+testData  <- read.table("X_test.txt")
+features  <- read.table("features.txt")
+## Activity Labels
+trainLabel  <- read.table("y_train.txt")
+testLabel  <- read.table("y_test.txt")
+actLabels   <- read.table("activity_labels.txt",col.names=c("ActNum","ActLabel"))
+## Subject info
+trainSubjects <- read.table("subject_train.txt")
+testSubjects <- read.table("subject_test.txt")
+#-------------------------------------------------------------
+## Step 1 Merges the training and the test sets to create one data set.
+#-------------------------------------------------------------
+mergedTTdata <- rbind(trainData,testData)
+# Set column names for the merged training & test data based on features
+names(mergedTTdata) <- as.character(features[,2])
+# merge train  & test Activity 
+mergedAct <- rbind(trainLabel,testLabel)
+names(mergedAct) <- c("Activity")
+# merge train & test subjects
+mergedSub <- rbind(trainSubjects,testSubjects)
+names(mergedSub) <- c("Subject")
+## Temp merged data  - Merge Train, Test, Subject and Activity usin cbind
+TempMergedData <- cbind(mergedAct, mergedSub, mergedTTdata )
+#TempMergedData <- cbind(mergedTTdata, mergedSub, mergedAct)
+#-------------------------------------------------------------
+## Step 2.Extracts only the measurements on the mean and standard deviation for each measurement.
+#-------------------------------------------------------------
+# Use matchcols to match column names based on pattern
+ColofInterest <- matchcols(TempMergedData, with=c("Subject","Activity","-mean()", "-std()"), method="or")
+# Converting the column names to character to be able select mean and standard deviation variables 
+ColofInterestList <- c(ColofInterest$Activity, ColofInterest$Subject, ColofInterest$'-mean()',ColofInterest$'-std()')
+# Dataset with Subject, Activity and mean and standard deviation variables only
+MeanStdData <- TempMergedData[,ColofInterestList]
+#-------------------------------------------------------------
+## Step 3. Uses descriptive activity names to name the activities in the data set
+#-------------------------------------------------------------
+# Add Activity lable column to merged dataset
+MeanStdDatawLabel <- merge(MeanStdData,actLabels,by.x="Activity",by.y="ActNum")
+#-------------------------------------------------------------
+## Step 4. Appropriately labels the data set with descriptive variable names. 
+#-------------------------------------------------------------
+#Covered in step 1  - also refer codebook.rmd
+names(MeanStdDatawLabel) <- make.names(names(MeanStdDatawLabel), unique = TRUE)
+#-------------------------------------------------------------
+## Step 5. From the data set in step 4, creates a second, 
+#independent tidy data set with the average of each variable for 
+#each activity and each subject.
+#-------------------------------------------------------------
+# Determine average of mean and standard dev variables for each Activity and each subject
+finalData <- aggregate(list(name = MeanStdDatawLabel), list(Activity = MeanStdDatawLabel$ActLabel, Subject = MeanStdDatawLabel
+$Subject), mean, na.rm = TRUE)
+#Remove duplicate Activity column & making column headings descriptive
+finalTidyData = finalData[,c(1:2,5:83)]
+names(finalTidyData) <- gsub("name.", "", names(finalTidyData))
+#convert the columns with average as numeric
+for(i in 3:ncol(finalTidyData)) {
+    finalTidyData[,i] <- as.numeric(as.character(finalTidyData[,i]))
+}
+# Creating an independent tidy data set in working directory
+write.table(finalTidyData , file=".\\SamsungTidyData.txt",row.name=FALSE)
