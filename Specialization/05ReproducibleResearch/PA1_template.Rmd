@@ -1,0 +1,107 @@
+##Peer Assessment 1 for Reproducible Research
+=============================================
+
+Loading and preprocessing data
+```{r loaddata}
+library(dplyr)
+library(ggplot2)
+setwd("C:/Users/Jay/Documents/DataAnalysis/Data")
+ActRawData <- read.csv(".\\activity.csv")
+str(ActRawData)
+#Converting the date column to date format
+ActRawData$date <- as.Date(as.character(ActRawData$date))
+#Copying the raw data into dataset for analysis
+TidyActData <- ActRawData
+str(TidyActData)
+```
+
+Mean total number of steps taken per day
+```{r meantotals}
+TotStepsbyDay <- tapply(TidyActData$steps, TidyActData$date, sum, na.rm=T)
+#Histogram for Total Steps by Day
+hist(TotStepsbyDay, main="Total Steps by Day", col="wheat", xlab = "Total Steps by Day")
+# Bar plot - Total # of steps for each day
+#barplot(TotStepsbyDay, col="wheat", xlab="Date", ylab="Total Steps", main="Total Steps #by Day")
+# Calculate mean and median for each day
+MeanStepsbyDay <- tapply(TidyActData$steps, TidyActData$date, mean,na.rm=T)
+data.frame(MeanStepsbyDay)
+MedianStepsbyDay <- tapply(TidyActData$steps, TidyActData$date, median, na.rm=T)
+data.frame(MedianStepsbyDay)
+```
+
+Average daily activity pattern
+```{r avgact}
+#Calculate avg daily actvity by Intervals
+aggIntdata <-aggregate(TidyActData, by=list(TidyActData$interval), FUN=mean, na.rm=TRUE)
+#Plot average daily activity patterns
+#Plot 1 - average daily activity patterns by interval
+#Plot 2 - average daily activity patterns by abolute Time intervals
+par(mfrow = c(1, 1), mar = c(4, 4, 2, 1), oma = c(0, 0, 2, 0))
+with(aggIntdata, {
+    plot(steps , type = "l", col="blue", main="Activity Pattern by Interval", xlab="Interval (5 minutes)", ylab = "Avg. no. of Steps")
+	abline(v = which(steps==max(steps)), lty = 2, col = "magenta", lwd = 4)
+	points(which(steps==max(steps)), max(steps),pch=3,cex=1,lwd=2,col="red")
+	legend("topright", pch = 3, col = c("red"), legend = c("Max Step Interval" , which(steps==max(steps))))
+	mtext("Average Daily Activity Pattern", outer = TRUE)}
+)
+#Display Interval with maximum number of steps
+paste(c("Interval with Max Steps: ") , which(aggIntdata$steps==max(aggIntdata$steps)))
+paste(c("Time Interval with Max Steps: ") , aggIntdata$interval[which(aggIntdata$steps==max(aggIntdata$steps))])
+```
+
+Imputing missing values
+```{r imputedata}
+#Calculate the total number of missing values in the dataset 
+paste("Total number of missing values in the dataset: ", sum(is.na(TidyActData)))
+# Split Data with NA and Non-NA records 
+# Dataset with NA records
+NAActData <- TidyActData[which(is.na(ActRawData$steps)),]
+str(NAActData)
+#Calculate avg daily actvity by Interval
+aggIntdata <-aggregate(TidyActData, by=list(TidyActData$interval), FUN=mean, na.rm=TRUE)
+# strategy for filling in all of the missing values in the dataset
+# Use the average steps by interval data to update the steps with NA
+mergedData <- merge(NAActData, aggIntdata, by = "interval")
+NewNAActData <- select(mergedData, steps.y, date.x, interval)
+colnames(NewNAActData) <- c("steps", "date", "interval")
+str(NewNAActData)
+# Dataet with no NA records
+NonNAData <- TidyActData[which(!is.na(ActRawData$steps)),]
+str(NonNAData)
+# New dataset that is equal to the original dataset but with the missing data filled in
+NewTidyData <- rbind(NonNAData, NewNAActData)
+# Data ordered by date and interval
+NewTidyData <- arrange(NewTidyData, date, interval)
+str(NewTidyData)
+```
+
+Mean total number of steps taken per day with imputed data
+```{r imputeplots}
+par(mfrow = c(1, 1))
+#Plotting total steps with new data
+NewTotStepsbyDay <- tapply(NewTidyData$steps, NewTidyData$date, sum, na.rm=T)
+#Histogram for Total Steps by Day
+hist(NewTotStepsbyDay, main="Total Steps by Day", col="blue", xlab = "Total Steps by Day")
+NewMeanStepsbyDay <- tapply(NewTidyData$steps, NewTidyData$date, mean, na.rm=T)
+# Compare Mean Steps by Day for original data and imputed data
+data.frame(MeanStepsbyDay, NewMeanStepsbyDay)
+NewMedianStepsbyDay <- tapply(NewTidyData$steps, NewTidyData$date, median, na.rm=T)
+# Compare Median Steps by Day for original data and imputed data
+data.frame(MedianStepsbyDay, NewMedianStepsbyDay)
+```
+
+Activity Patterns between weekdays and weekends
+```{r actwdwe}
+#Add new column Day
+NewTidyData$Day <- weekdays(NewTidyData$date)
+#Changing the Day column "weekend" if it Saturday or Sunday and "weekday" otherwise
+NewTidyData$Day[!(NewTidyData$Day %in% c('Saturday','Sunday'))] = "weekday"
+NewTidyData$Day[NewTidyData$Day %in% c('Saturday','Sunday')] = "weekend"
+#Calculate 
+WdWeData <- aggregate(steps ~ interval + Day, data = NewTidyData, mean)
+#plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) #and the average number of steps taken
+library(lattice)
+xyplot(steps ~ interval | Day , data = WdWeData, type = "l", layout = c(1, 2), ylab = "Number of Steps", xlab="Interval")
+#qplot(interval, steps, data=WdWeData, geom=c("line"), facets = Day~.)
+```
+
