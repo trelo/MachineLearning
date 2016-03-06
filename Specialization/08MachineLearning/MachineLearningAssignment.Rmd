@@ -1,17 +1,15 @@
 ---
-title: 'Machine Learning: Prediction Assignment'
-author: "Jai Holkar"
+title: 'Prediction of Daily Living Activities using Qualitative Activity Recognition data'
+author: "Jay H."
 date: "Friday, March 04, 2016"
 output: html_document
 ---
 
-#Project Overview
+###Background
 
-##Background
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, the goal is to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website [here](http://groupware.les.inf.puc-rio.br/har#wle_paper_section#ixzz423nBFGdL).
 
-Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here (see the section on the Weight Lifting Exercise Dataset).
-
-##Data
+###Data
 
 The training data for this project are available here: https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
 
@@ -27,13 +25,17 @@ The classe variable contains 5 different ways barbell lifts were performed corre
 - Class D: lowering the dumbbell only halfway
 - Class E: throwing the hips to the front
 
-##Objective
+Class A corresponds to the specified execution of the exercise, while the other 4 classes correspond to common mistakes.
 
-The goal of this project is to predict the manner in which people performed barbell lifts. This is the classe variable in the training set. You may use any of the other variables to predict with. You should create a report describing how you built your model, how you used cross validation, what you think the expected out of sample error is, and why you made the choices you did. You will also use your prediction model to predict 20 different test cases.
+Read more: 
 
-##Loading the data
+###Objective
 
-Packages used for analysis. This assumes the packages are already installed. Use the install.packages("") command if a package not installed yet.
+The goal of this project is to predict the manner in which people performed barbell lifts. This is the classe variable in the training set. The objective is to create a report describing the prediction models built, use of cross validations techniques and expected sample error for each model. The report also describes the reason for model choices. The report also covers the use your prediction model to predict 20 different test cases.
+
+###Sourcing the data
+
+Packages used for analysis.  
 ```{r loadlib, message=FALSE, warning=FALSE}
 library(caret)
 library(randomForest)
@@ -50,91 +52,81 @@ Load the data into R
 train_url <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
 # The location where the testing data is to be downloaded from
 test_url <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
-#Before downloading the data, you can change your working directory by setting the path in setwd()
-# Download the training data in your working directory, if it hasn't been already
-#if (!file.exists("train_data.csv")){
-#  download.file(train_url, destfile=".\\train_data.csv", method="curl")
-#}
-# Download the testing data in your working directory
-#if (!file.exists("test_data.csv")){
-#download.file(test_url, destfile=".\\test_data.csv", method="curl")
-#}
-# Read the Training CSV file into R & replace missing values & excel division error strings #DIV/0! #with #'NA'
-#train_data <- read.csv(".\\train_data.csv", na.strings=c("NA","#DIV/0!",""), header=TRUE)
-train_data <- read.csv(train_url, na.strings=c("NA","#DIV/0!",""), header=TRUE)
-# Read the Testing CSV file into R & replace missing values & excel division error strings #DIV/0! with #'NA'
-#test_data <- read.csv(".\\test_data.csv", na.strings=c("NA","#DIV/0!",""), header=TRUE)
-test_data <- read.csv(test_url, na.strings=c("NA","#DIV/0!",""), header=TRUE)
-# Take a look at the Training data classe variable
-summary(train_data$classe)
+# Replace missing values & excel division error strings #DIV/0! #with #'NA'
+train_set <- read.csv(train_url, na.strings=c("NA","#DIV/0!",""), header=TRUE)
+# Replace missing values & excel division error strings #DIV/0! with 'NA'
+test_set <- read.csv(test_url, na.strings=c("NA","#DIV/0!",""), header=TRUE)
+# Training data classe variable
+summary(train_set$classe)
 ```
 
 ##Partitioning the data for Cross-validation
-The training data is split into two data sets, one for training the model and one for testing the performance of our model. The data is partitioned by the classe variable, which is the varible we will be predicting. The data is split into 60% for training and 40% for testing.
+The training data is split into two data sets, one for training the model and one for testing the performance of our model. The data is partitioned by the classe variable, which is the varible we will be predicting. The data is split into 70% for training and 30% for testing.
 ```{r partdata}
-inTrain <- createDataPartition(y=train_data$classe, p = 0.60, list=FALSE)
-training <- train_data[inTrain,]
-testing <- train_data[-inTrain,]
+inTrain <- createDataPartition(y=train_set$classe, p = 0.70, list=FALSE)
+training <- train_set[inTrain,]
+testing <- train_set[-inTrain,]
 dim(training); dim(testing)
 ```
 
 ##Data Processing
-Drop the first 7 variables because these are made up of metadata that would cause the model to perform poorly.
+Drop the first 7 variables because these are made up of metadata such as time stamp, user which is not relevant for the prediction model.
 ```{r dataprop}
 training <- training[,-c(1:7)]
 #Remove NearZeroVariance variables
 nzv <- nearZeroVar(training, saveMetrics=TRUE)
-training <- training[, nzv$nzv==FALSE]
+training <- training[, nzv$nzv==FALSE]                     
 ```
 
-There are a lot of variables where most of the values are 'NA'. Drop variables that have 70% or more of the values as 'NA'.
-```{r dropNA}
-training_clean <- training
+Remove variables with no data or 'NA' values. 
+Assumption: Drop variables that have 70% or more of the values as 'NA'.
+```{r dropna1}
+training_nan <- training
 for(i in 1:length(training)) {
   if( sum( is.na( training[, i] ) ) /nrow(training) >= .7) {
-    for(j in 1:length(training_clean)) {
-      if( length( grep(names(training[i]), names(training_clean)[j]) ) == 1)  {
-        training_clean <- training_clean[ , -j]
+    for(j in 1:length(training_nan)) {
+      if( length( grep(names(training[i]), names(training_nan)[j]) ) == 1)  {
+        training_nan <- training_nan[ , -j]
       }   
     } 
   }
 }
 # Set the new cleaned up dataset back to the old dataset name
-training <- training_clean
+training <- training_nan
 ```
-
-Transform the test_data dataset
+Transform the test_set dataset
 ```{r getcolname}
 # Get the column names in the training dataset
 columns <- colnames(training)
 # Drop the class variable
 columns2 <- colnames(training[, -53])
 # Subset the test data on the variables that are in the training data set
-test_data <- test_data[columns2]
-dim(test_data)
+test_set <- test_set[columns2]
+dim(test_set)
 ```
 
-##Cross-Validation: Prediction with Random Forest
+###Cross-Validation: Prediction with Random Forest
 
 A Random Forest model is built on the training set. Then the results are evaluated on the test set
 ```{r cv1, cache=TRUE}
 set.seed(12345)
-modFit <- randomForest(classe ~ ., data=training)
-prediction <- predict(modFit, testing)
+modFit1 <- randomForest(classe ~ ., data=training)
+prediction <- predict(modFit1, testing)
 cm <- confusionMatrix(prediction, testing$classe)
 print(cm)
 overall.accuracy <- round(cm$overall['Accuracy'] * 100, 2)
-sam.err <- round(1 - cm$overall['Accuracy'],2)
+sam.err <- round(1 - cm$overall['Accuracy'],5)
 ```
-The model is 99.63% accurate on the testing data partitioned from the training data. The expected out of sample error is roughly 0.01%.
+
+The model is `r overall.accuracy`% accurate on the testing data partitioned from the training data. The expected out of sample error is roughly `r sam.err`%.
 
 ```{r plot1}
-plot(modFit)
+plot(modFit1)
 ```
 
-In the above figure, error rates of the model are plotted over 500 trees. The error rate is less than 0.04 for all 5 classe.
+In the above figure, error rates of the model are plotted over 500 trees. The error rate is less than `r sam.err`% for all 5 classe.
 
-##Cross-Validation: Prediction with a Decision Tree
+###Cross-Validation: Prediction with a Decision Tree
 
 ```{r cv2}
 set.seed(12345)
@@ -145,20 +137,23 @@ print(cm2)
 overall.accuracy2 <- round(cm2$overall['Accuracy'] * 100, 2)
 sam.err2 <- round(1 - cm2$overall['Accuracy'],2)
 ```
-The model is 73.09% accurate on the testing data partitioned from the training data. The expected out of sample error is roughly 0.26%.
+The model is `r overall.accuracy2`% accurate on the testing data partitioned from the training data. The expected out of sample error is roughly `r sam.err2`%.
 
 Plot the decision tree model
 ```{r plot2}
 fancyRpartPlot(modFit2)
 ```
-##Prediction on the Test Data
+###Prediction on the Test Data
 
-The Random Forest model gave an accuracy of 99.63%, which is much higher than the 73.09% accuracy from the Decision Tree. So we will use the Random Forest model to make the predictions on the test data to predict the way 20 participates performed the exercise.
+The Random Forest model gave an accuracy of `r overall.accuracy`%, which is much higher than the `r overall.accuracy2`% accuracy from the Decision Tree. So we will use the Random Forest model to make the predictions on the test data to predict the way 20 participates performed the exercise.
 ```{r predict1}
-final_prediction <- predict(modFit, test_data, type="class")
+final_prediction <- predict(modFit1, test_set, type="class")
 print(final_prediction)
 ```
 
-##Conclusion
+###Conclusion
 
 There are many different machine learning algorithm. The Random Forest and Decision Tree models were compared for analysis. For this data, the Random Forest proved to be a more accurate way to predict the manner in which the exercise was done.
+
+###References:
+*1. Weight Lifting Exercise DatasetVelloso, E.; Bulling, A.; Gellersen, H.; Ugulino, W.; Fuks, H. Qualitative Activity Recognition of Weight Lifting Exercises. Proceedings of 4th International Conference in Cooperation with SIGCHI (Augmented Human '13) . Stuttgart, Germany: ACM SIGCHI, 2013.*
